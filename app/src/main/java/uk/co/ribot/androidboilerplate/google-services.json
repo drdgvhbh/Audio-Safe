@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "889807462251",
+    "firebase_url": "https://bash-12864.firebaseio.com",
+    "project_id": "bash-12864",
+    "storage_bucket": "bash-12864.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:889807462251:android:a5744bcf4e1258f5",
+        "android_client_info": {
+          "package_name": "com.example.spenc.bash"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "889807462251-1s995ic32lf3gfe74ici1qpvd864upun.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDI3l1aGD27Irqt3JfZrFZrilyqN7sQ-kk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

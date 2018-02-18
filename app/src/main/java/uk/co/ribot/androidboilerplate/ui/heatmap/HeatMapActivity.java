@@ -268,6 +268,7 @@ public class HeatMapActivity extends BaseActivity implements IHeatMapView,
         return Math.pow(10.0, exponent) - 1;
     }
 
+
     @Override
     public void onStatusChanged(String s, int i, Bundle bundle) {
 
