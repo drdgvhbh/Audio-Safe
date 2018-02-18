@@ -51,11 +51,24 @@ public class AudioManager {
 
     private int avgDb;
 
+    private double avgDbOverTime=0;
+    private long numOfAvgs=1;
+    private Thread avgThread = null;
+
     public int getAvgDb() {
         return this.avgDb;
     }
     public AudioManager() {
     }
+
+    public double getAvg() {
+        double temp = avgDbOverTime;
+        avgDbOverTime = 0;
+        numOfAvgs = 0;
+        Log.i("avg over time = ", ""+temp+" /n AVG CLEARED!");
+        return temp;
+    }
+
 
     public void startRecording() {
         recorder = new AudioRecord(MediaRecorder.AudioSource.DEFAULT, SAMPLING_RATE_IN_HZ,
@@ -98,6 +111,12 @@ public class AudioManager {
                 avgDb = (int) loudness * 2 / counter;
                 Log.i ("Derp", "Loudness = " + avgDb);
                 buffer.clear();
+
+                if(avgDbOverTime==0) {
+                    avgDbOverTime = avgDb;
+                }
+                avgDbOverTime=(avgDbOverTime*(numOfAvgs++) + avgDb)/numOfAvgs;
+                Log.i("AvgOverTime: ", ""+avgDbOverTime);
             }
         }
 
