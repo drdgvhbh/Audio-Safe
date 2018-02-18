@@ -54,12 +54,12 @@ public class HeatMapActivity extends BaseActivity implements IHeatMapView,
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
     private static final long MIN_TIME = 0;
-    private static final float MIN_DISTANCE = 1;
+    private static final float MIN_DISTANCE = 0.25f;
 
     /**
      * Alternative radius for convolution
      */
-    private static final int HEATMAP_RADIUS = 10;
+    private static final int HEATMAP_RADIUS = 15;
 
     /**
      * Alternative opacity of heatmap overlay
@@ -79,7 +79,7 @@ public class HeatMapActivity extends BaseActivity implements IHeatMapView,
     };
 
     public static final float[] ALT_HEATMAP_GRADIENT_START_POINTS = {
-            0.0f, 0.10f, 0.20f, 0.60f, 1.0f
+            0.0f, 0.10f, 0.20f, 0.9f, 1.0f
     };
 
     public static final Gradient ALT_HEATMAP_GRADIENT = new Gradient(ALT_HEATMAP_GRADIENT_COLORS,
@@ -249,7 +249,7 @@ public class HeatMapActivity extends BaseActivity implements IHeatMapView,
     }
 
     private void handleHeatMap(LatLng co) {
-        dataSet.add(new WeightedLatLng(co, getWeight(this.audioManager.getAvgDb())));
+        dataSet.add(new WeightedLatLng(co, getWeight((int)this.audioManager.averageDBOverTime())));
         if (mOverlay != null) {
             mOverlay.clearTileCache();
         }
@@ -264,8 +264,8 @@ public class HeatMapActivity extends BaseActivity implements IHeatMapView,
     }
 
     public double getWeight(int avgVol) {
-        double exponent = avgVol / 30.0 + 0.0;
-        return Math.pow(2, exponent) - 1;
+        double exponent = avgVol / 200.0 + 0.0;
+        return Math.pow(10.0, exponent) - 1;
     }
 
     @Override
