@@ -25,8 +25,14 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlay;
+import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.maps.android.heatmaps.Gradient;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 
 import uk.co.ribot.androidboilerplate.R;
 import uk.co.ribot.androidboilerplate.ui.base.BaseActivity;
@@ -73,6 +79,12 @@ public class HeatMapActivity extends BaseActivity implements IHeatMapView,
 
     public static final Gradient ALT_HEATMAP_GRADIENT = new Gradient(ALT_HEATMAP_GRADIENT_COLORS,
             ALT_HEATMAP_GRADIENT_START_POINTS);
+
+    /**
+     * Maps name of data set to data (list of LatLngs)
+     * Also maps to the URL of the data set for attribution
+     */
+    private List<LatLng> dataSet = new ArrayList<LatLng>();
 
     private HeatmapTileProvider mProvider;
     private TileOverlay mOverlay;
@@ -136,8 +148,33 @@ public class HeatMapActivity extends BaseActivity implements IHeatMapView,
             return;
         }
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
-
-
+        dataSet = new ArrayList<LatLng>() {
+/*            {
+                add(new LatLng(45.4231, 75.6831));
+                add(new LatLng(45.4231, 75.6831));
+                add(new LatLng(45.4231, 75.6831));
+                add(new LatLng(45.4231, 75.6831));
+                add(new LatLng(45.4231, 75.6831));
+                add(new LatLng(45.4231, 75.6831));
+                add(new LatLng(45.4231, 75.6831));
+                add(new LatLng(45.4231, 75.6831));
+                add(new LatLng(45.4231, 75.6831));
+            }*/
+        };
+        Random generator = new Random();
+        for (int i = 0; i < 10000; i++) {
+            double lat =  45.4231; /*+ ((generator.nextDouble()) - 0.5);*/
+            double longa = 75.6831; /*+ ((generator.nextDouble()) - 0.5);*/
+            LatLng coord = new LatLng(lat, longa);
+            dataSet.add(coord);
+        }
+        if (mOverlay != null) {
+            mOverlay.clearTileCache();
+        }
+        if (mProvider == null) {
+            mProvider = new HeatmapTileProvider.Builder().data(dataSet).build();
+            mOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
+        }
         // do heatmap stuff
 /*        Spinner spinner = (Spinner) findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -234,4 +271,5 @@ public class HeatMapActivity extends BaseActivity implements IHeatMapView,
     public void onProviderDisabled(String s) {
 
     }
+
 }
