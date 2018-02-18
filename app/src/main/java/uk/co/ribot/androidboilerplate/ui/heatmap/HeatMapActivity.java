@@ -57,13 +57,13 @@ public class HeatMapActivity extends BaseActivity implements IHeatMapView,
      */
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
-    private static final long MIN_TIME = 0;
-    private static final float MIN_DISTANCE = 0.25f;
+    private static final long MIN_TIME = 100;
+    private static final float MIN_DISTANCE = 1.25f;
 
     /**
      * Alternative radius for convolution
      */
-    private static final int HEATMAP_RADIUS = 10;
+    private static final int HEATMAP_RADIUS = 20;
 
     /**
      * Alternative opacity of heatmap overlay
@@ -262,14 +262,15 @@ public class HeatMapActivity extends BaseActivity implements IHeatMapView,
         int db = (int)this.audioManager.averageDBOverTime();
         this.decibels.add(db);
         dataSet.add(new WeightedLatLng(co, getWeight(db)));
-        if (mOverlay != null) {
+/*        if (mOverlay != null) {
             mOverlay.clearTileCache();
-        }
+        }*/
 /*        if (mProvider == null) {*/
         mProvider = new HeatmapTileProvider.Builder()
                 .weightedData(dataSet)
                 .radius(HEATMAP_RADIUS)
                 .build();
+        mMap.clear();
         mOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
 /*        }*/
 
