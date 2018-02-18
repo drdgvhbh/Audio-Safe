@@ -79,7 +79,7 @@ public class HeatMapActivity extends BaseActivity implements IHeatMapView,
     };
 
     public static final float[] ALT_HEATMAP_GRADIENT_START_POINTS = {
-            0.0f, 0.10f, 0.20f, 0.60f, 1.0f
+            0.0f, 0.10f, 0.20f, 0.85f, 1.0f
     };
 
     public static final Gradient ALT_HEATMAP_GRADIENT = new Gradient(ALT_HEATMAP_GRADIENT_COLORS,
@@ -264,8 +264,8 @@ public class HeatMapActivity extends BaseActivity implements IHeatMapView,
     }
 
     public double getWeight(int avgVol) {
-        double exponent = avgVol / 30.0 + 0.0;
-        return Math.pow(1.9, exponent) - 1;
+        double exponent = avgVol / 15.0 + 0.0;
+        return Math.pow(1.5, exponent) - 1;
     }
 
     @Override
