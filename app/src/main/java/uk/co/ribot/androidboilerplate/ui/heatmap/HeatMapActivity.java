@@ -2,6 +2,7 @@ package uk.co.ribot.androidboilerplate.ui.heatmap;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -13,6 +14,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -39,8 +41,10 @@ import java.util.Random;
 import java.util.Set;
 
 import uk.co.ribot.androidboilerplate.R;
+import uk.co.ribot.androidboilerplate.StatsActivity;
 import uk.co.ribot.androidboilerplate.audio.AudioManager;
 import uk.co.ribot.androidboilerplate.ui.base.BaseActivity;
+import uk.co.ribot.androidboilerplate.ui.home.HomeActivity;
 
 public class HeatMapActivity extends BaseActivity implements IHeatMapView,
         GoogleMap.OnMyLocationButtonClickListener, OnMapReadyCallback,
@@ -290,6 +294,16 @@ public class HeatMapActivity extends BaseActivity implements IHeatMapView,
     @Override
     public void onProviderDisabled(String s) {
 
+    }
+
+    public void onButtonHome(View view){
+        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+        startActivity(intent);
+    }
+
+    public void onButtonStats(View view){
+        Intent intent = new Intent(getApplicationContext(), StatsActivity.class);
+        startActivity(intent);
     }
 
 }

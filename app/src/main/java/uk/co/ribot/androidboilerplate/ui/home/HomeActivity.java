@@ -17,11 +17,14 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import java.util.HashSet;
 import java.util.Set;
 
+import butterknife.internal.ListenerClass;
 import uk.co.ribot.androidboilerplate.R;
 import uk.co.ribot.androidboilerplate.StatsActivity;
 import uk.co.ribot.androidboilerplate.audio.AudioManager;
 import uk.co.ribot.androidboilerplate.ui.base.BaseActivity;
 import uk.co.ribot.androidboilerplate.ui.heatmap.HeatMapActivity;
+
+import static com.jjoe64.graphview.GridLabelRenderer.GridStyle.NONE;
 
 public class HomeActivity extends BaseActivity {
 
@@ -38,6 +41,10 @@ public class HomeActivity extends BaseActivity {
         setContentView(R.layout.activity_home);
         GraphView graph = (GraphView) findViewById(R.id.graph);
         graph.getLegendRenderer().setVisible(false);
+        graph.getGridLabelRenderer().setGridStyle(NONE);
+        graph.getGridLabelRenderer().setHorizontalLabelsVisible(false);
+        graph.getGridLabelRenderer().setVerticalLabelsVisible(false);
+        graph.getViewport().setScalable(false);
         dataSet = new HashSet<WeightedLatLng>();
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[] {
                 new DataPoint(0, 1),
