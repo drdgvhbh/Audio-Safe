@@ -55,13 +55,10 @@ public class AudioManager {
     private long numOfAvgs=1;
     private Thread avgThread = null;
 
-    public int getAvgDb() {
-        return this.avgDb;
-    }
     public AudioManager() {
     }
 
-    public double getAvg() {
+    public double averageDBOverTime() {
         double temp = avgDbOverTime;
         avgDbOverTime = 0;
         numOfAvgs = 0;

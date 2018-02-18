@@ -249,7 +249,7 @@ public class HeatMapActivity extends BaseActivity implements IHeatMapView,
     }
 
     private void handleHeatMap(LatLng co) {
-        dataSet.add(new WeightedLatLng(co, getWeight(this.audioManager.getAvgDb())));
+        dataSet.add(new WeightedLatLng(co, getWeight((int)this.audioManager.averageDBOverTime())));
         if (mOverlay != null) {
             mOverlay.clearTileCache();
         }
