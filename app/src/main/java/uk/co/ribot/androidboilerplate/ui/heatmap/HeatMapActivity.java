@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -28,13 +29,17 @@ import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.maps.android.heatmaps.Gradient;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
+import com.google.maps.android.heatmaps.WeightedLatLng;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import uk.co.ribot.androidboilerplate.R;
+import uk.co.ribot.androidboilerplate.audio.AudioManager;
 import uk.co.ribot.androidboilerplate.ui.base.BaseActivity;
 
 public class HeatMapActivity extends BaseActivity implements IHeatMapView,
@@ -48,13 +53,13 @@ public class HeatMapActivity extends BaseActivity implements IHeatMapView,
      */
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
-    private static final long MIN_TIME = 400;
-    private static final float MIN_DISTANCE = 1000;
+    private static final long MIN_TIME = 0;
+    private static final float MIN_DISTANCE = 1;
 
     /**
      * Alternative radius for convolution
      */
-    private static final int ALT_HEATMAP_RADIUS = 10;
+    private static final int HEATMAP_RADIUS = 10;
 
     /**
      * Alternative opacity of heatmap overlay
@@ -84,7 +89,7 @@ public class HeatMapActivity extends BaseActivity implements IHeatMapView,
      * Maps name of data set to data (list of LatLngs)
      * Also maps to the URL of the data set for attribution
      */
-    private List<LatLng> dataSet = new ArrayList<LatLng>();
+    private Set<WeightedLatLng> dataSet = new HashSet<WeightedLatLng>();
 
     private HeatmapTileProvider mProvider;
     private TileOverlay mOverlay;
@@ -93,6 +98,7 @@ public class HeatMapActivity extends BaseActivity implements IHeatMapView,
     private boolean mDefaultRadius = true;
     private boolean mDefaultOpacity = true;
 
+    private boolean isFirstLoad = true;
     /**
      * Flag indicating whether a requested permission has been denied after returning in
      * {@link #onRequestPermissionsResult(int, String[], int[])}.
@@ -103,6 +109,8 @@ public class HeatMapActivity extends BaseActivity implements IHeatMapView,
 
     private LocationManager locationManager;
 
+    private AudioManager audioManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,6 +119,7 @@ public class HeatMapActivity extends BaseActivity implements IHeatMapView,
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        this.audioManager = new AudioManager();
     }
 
 
@@ -132,6 +141,7 @@ public class HeatMapActivity extends BaseActivity implements IHeatMapView,
         enableMyLocation();
         locationManager = (LocationManager) getSystemService(Context
                 .LOCATION_SERVICE);
+        this.checkRecordPermission();
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -148,41 +158,8 @@ public class HeatMapActivity extends BaseActivity implements IHeatMapView,
             return;
         }
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
-        dataSet = new ArrayList<LatLng>() {
-/*            {
-                add(new LatLng(45.4231, 75.6831));
-                add(new LatLng(45.4231, 75.6831));
-                add(new LatLng(45.4231, 75.6831));
-                add(new LatLng(45.4231, 75.6831));
-                add(new LatLng(45.4231, 75.6831));
-                add(new LatLng(45.4231, 75.6831));
-                add(new LatLng(45.4231, 75.6831));
-                add(new LatLng(45.4231, 75.6831));
-                add(new LatLng(45.4231, 75.6831));
-            }*/
-        };
-        Random generator = new Random();
-        for (int i = 0; i < 10000; i++) {
-            double lat =  45.4231; /*+ ((generator.nextDouble()) - 0.5);*/
-            double longa = 75.6831; /*+ ((generator.nextDouble()) - 0.5);*/
-            LatLng coord = new LatLng(lat, longa);
-            dataSet.add(coord);
-        }
-        if (mOverlay != null) {
-            mOverlay.clearTileCache();
-        }
-        if (mProvider == null) {
-            mProvider = new HeatmapTileProvider.Builder().data(dataSet).build();
-            mOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
-        }
-        // do heatmap stuff
-/*        Spinner spinner = (Spinner) findViewById(R.id.spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.heatmaps_datasets_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new SpinnerActivity());*/
 
+        this.audioManager.startRecording();
     }
 
     /**
@@ -197,6 +174,16 @@ public class HeatMapActivity extends BaseActivity implements IHeatMapView,
         } else if (mMap != null) {
             // Access to the location has been granted to the app.
             mMap.setMyLocationEnabled(true);
+        }
+    }
+
+    private void checkRecordPermission() {
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO},
+                    123);
         }
     }
 
@@ -250,11 +237,35 @@ public class HeatMapActivity extends BaseActivity implements IHeatMapView,
 
     @Override
     public void onLocationChanged(Location location) {
+        Log.d("LocationUpdate", "Location Updated!");
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
-        mMap.animateCamera(cameraUpdate);
-        locationManager.removeUpdates(this);
+        if (isFirstLoad) {
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
+            mMap.animateCamera(cameraUpdate);
+            this.isFirstLoad = false;
+    }
+        this.handleHeatMap(latLng);
 
+    }
+
+    private void handleHeatMap(LatLng co) {
+        dataSet.add(new WeightedLatLng(co, getWeight(this.audioManager.getAvgDb())));
+        if (mOverlay != null) {
+            mOverlay.clearTileCache();
+        }
+/*        if (mProvider == null) {*/
+        mProvider = new HeatmapTileProvider.Builder()
+                .weightedData(dataSet)
+                .radius(HEATMAP_RADIUS)
+                .build();
+        mOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
+/*        }*/
+
+    }
+
+    public double getWeight(int avgVol) {
+        double exponent = avgVol / 30.0 + 0.0;
+        return Math.pow(2, exponent) - 1;
     }
 
     @Override
