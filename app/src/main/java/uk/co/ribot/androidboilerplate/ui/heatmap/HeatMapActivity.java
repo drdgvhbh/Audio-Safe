@@ -59,7 +59,7 @@ public class HeatMapActivity extends BaseActivity implements IHeatMapView,
     /**
      * Alternative radius for convolution
      */
-    private static final int HEATMAP_RADIUS = 20;
+    private static final int HEATMAP_RADIUS = 15;
 
     /**
      * Alternative opacity of heatmap overlay
@@ -90,6 +90,12 @@ public class HeatMapActivity extends BaseActivity implements IHeatMapView,
      * Also maps to the URL of the data set for attribution
      */
     private Set<WeightedLatLng> dataSet = new HashSet<WeightedLatLng>();
+
+    private List<Integer> decibels = new ArrayList<>();
+
+    public Iterable<Integer> getDecibels() {
+        return this.decibels;
+    }
 
     private HeatmapTileProvider mProvider;
     private TileOverlay mOverlay;
@@ -249,7 +255,9 @@ public class HeatMapActivity extends BaseActivity implements IHeatMapView,
     }
 
     private void handleHeatMap(LatLng co) {
-        dataSet.add(new WeightedLatLng(co, getWeight((int)this.audioManager.averageDBOverTime())));
+        int db = (int)this.audioManager.averageDBOverTime();
+        this.decibels.add(db);
+        dataSet.add(new WeightedLatLng(co, getWeight(db)));
         if (mOverlay != null) {
             mOverlay.clearTileCache();
         }
@@ -264,13 +272,8 @@ public class HeatMapActivity extends BaseActivity implements IHeatMapView,
     }
 
     public double getWeight(int avgVol) {
-<<<<<<< HEAD
-        double exponent = avgVol / 4000.0 + 0.0;
+        double exponent = avgVol / 40.0 + 0.0;
         return Math.pow(1.9, exponent) - 1;
-=======
-        double exponent = avgVol / 200.0 + 0.0;
-        return Math.pow(10.0, exponent) - 1;
->>>>>>> problem
     }
 
 

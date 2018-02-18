@@ -51,7 +51,7 @@ public class HomeActivity extends BaseActivity {
 
     protected void run(){
         if(System.currentTimeMillis()- scheduledTime >= MAXTIME){
-            dataSet.add(new WeightedLatLng(co, getWeight((int)this.audioManager.averageDBOverTime())));
+           /* dataSet.add(new WeightedLatLng(co, getWeight((int)this.audioManager.averageDBOverTime())));*/
         };
     }
 
