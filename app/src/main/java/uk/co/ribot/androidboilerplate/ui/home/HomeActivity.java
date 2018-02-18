@@ -14,9 +14,10 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 
 import uk.co.ribot.androidboilerplate.R;
 import uk.co.ribot.androidboilerplate.StatsActivity;
+import uk.co.ribot.androidboilerplate.ui.base.BaseActivity;
 import uk.co.ribot.androidboilerplate.ui.heatmap.HeatMapActivity;
 
-public class HomeActivity extends AppCompatActivity{
+public class HomeActivity extends BaseActivity {
 
 
     @Override
