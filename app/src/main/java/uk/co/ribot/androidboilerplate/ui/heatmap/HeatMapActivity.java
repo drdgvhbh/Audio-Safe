@@ -12,6 +12,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -22,7 +24,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.TileOverlay;
 import com.google.maps.android.heatmaps.Gradient;
+import com.google.maps.android.heatmaps.HeatmapTileProvider;
 
 import uk.co.ribot.androidboilerplate.R;
 import uk.co.ribot.androidboilerplate.ui.base.BaseActivity;
@@ -69,6 +73,13 @@ public class HeatMapActivity extends BaseActivity implements IHeatMapView,
 
     public static final Gradient ALT_HEATMAP_GRADIENT = new Gradient(ALT_HEATMAP_GRADIENT_COLORS,
             ALT_HEATMAP_GRADIENT_START_POINTS);
+
+    private HeatmapTileProvider mProvider;
+    private TileOverlay mOverlay;
+
+    private boolean mDefaultGradient = true;
+    private boolean mDefaultRadius = true;
+    private boolean mDefaultOpacity = true;
 
     /**
      * Flag indicating whether a requested permission has been denied after returning in
@@ -125,14 +136,16 @@ public class HeatMapActivity extends BaseActivity implements IHeatMapView,
             return;
         }
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
-        //You can also use LocationManager.GPS_PROVIDER and LocationManager.PASSIVE_PROVIDER
-/*        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                new LatLng(location.getLatitude(), location.getLongitude()),
-                12.0f));*/
-        // Add a marker in Sydney and move the camera
-/*        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));*/
+
+
+        // do heatmap stuff
+/*        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.heatmaps_datasets_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new SpinnerActivity());*/
+
     }
 
     /**
