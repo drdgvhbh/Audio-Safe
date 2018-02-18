@@ -119,6 +119,7 @@ dependencies {
     compile "com.jakewharton:butterknife:$BUTTERKNIFE_VERSION"
     compile 'com.google.android.gms:play-services-maps:11.8.0'
     compile 'com.android.support:appcompat-v7:25.4.0'
+    compile 'com.google.maps.android:android-maps-utils:0.5'
     annotationProcessor "com.jakewharton:butterknife-compiler:$BUTTERKNIFE_VERSION"
 
     // Replace provided dependency below with official AutoValue once this issue is fixed

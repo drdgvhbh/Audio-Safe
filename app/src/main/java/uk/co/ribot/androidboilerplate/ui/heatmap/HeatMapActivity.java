@@ -3,6 +3,7 @@ package uk.co.ribot.androidboilerplate.ui.heatmap;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -21,6 +22,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.heatmaps.Gradient;
 
 import uk.co.ribot.androidboilerplate.R;
 import uk.co.ribot.androidboilerplate.ui.base.BaseActivity;
@@ -38,6 +40,35 @@ public class HeatMapActivity extends BaseActivity implements IHeatMapView,
 
     private static final long MIN_TIME = 400;
     private static final float MIN_DISTANCE = 1000;
+
+    /**
+     * Alternative radius for convolution
+     */
+    private static final int ALT_HEATMAP_RADIUS = 10;
+
+    /**
+     * Alternative opacity of heatmap overlay
+     */
+    private static final double ALT_HEATMAP_OPACITY = 0.4;
+
+    /**
+     * Alternative heatmap gradient (blue -> red)
+     * Copied from Javascript version
+     */
+    private static final int[] ALT_HEATMAP_GRADIENT_COLORS = {
+            Color.argb(0, 0, 255, 255),// transparent
+            Color.argb(255 / 3 * 2, 0, 255, 255),
+            Color.rgb(0, 191, 255),
+            Color.rgb(0, 0, 127),
+            Color.rgb(255, 0, 0)
+    };
+
+    public static final float[] ALT_HEATMAP_GRADIENT_START_POINTS = {
+            0.0f, 0.10f, 0.20f, 0.60f, 1.0f
+    };
+
+    public static final Gradient ALT_HEATMAP_GRADIENT = new Gradient(ALT_HEATMAP_GRADIENT_COLORS,
+            ALT_HEATMAP_GRADIENT_START_POINTS);
 
     /**
      * Flag indicating whether a requested permission has been denied after returning in
