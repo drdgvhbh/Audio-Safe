@@ -59,7 +59,7 @@ public class HeatMapActivity extends BaseActivity implements IHeatMapView,
     /**
      * Alternative radius for convolution
      */
-    private static final int HEATMAP_RADIUS = 15;
+    private static final int HEATMAP_RADIUS = 10;
 
     /**
      * Alternative opacity of heatmap overlay
@@ -272,7 +272,7 @@ public class HeatMapActivity extends BaseActivity implements IHeatMapView,
     }
 
     public double getWeight(int avgVol) {
-        double exponent = avgVol / 40.0 + 0.0;
+        double exponent = avgVol / 54.0 + 0.0;
         return Math.pow(1.9, exponent) - 1;
     }
 
