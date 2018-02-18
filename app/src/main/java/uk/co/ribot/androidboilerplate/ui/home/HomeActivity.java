@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import uk.co.ribot.androidboilerplate.R;
+import uk.co.ribot.androidboilerplate.StatsActivity;
 import uk.co.ribot.androidboilerplate.ui.heatmap.HeatMapActivity;
 
 public class HomeActivity extends AppCompatActivity {
@@ -18,6 +19,11 @@ public class HomeActivity extends AppCompatActivity {
 
     public void onButtonMap(View view){
         Intent intent = new Intent(getApplicationContext(), HeatMapActivity.class);
+        startActivity(intent);
+    }
+
+    public void onButtonStats(View view){
+        Intent intent = new Intent(getApplicationContext(), StatsActivity.class);
         startActivity(intent);
     }
 
