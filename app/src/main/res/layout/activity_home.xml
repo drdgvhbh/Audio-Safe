@@ -62,4 +62,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <com.jjoe64.graphview.GraphView
+        android:layout_height="200dp"
+        android:id="@+id/graph"
+        android:layout_width="match_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android" />
+
 </android.support.constraint.ConstraintLayout>
